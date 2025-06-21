@@ -1,7 +1,9 @@
 package org.wingate.ivr.ui;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +30,18 @@ public class MainPanel extends JPanel {
     private final Map<Integer, BufferedImage> images;
     private int yOffset;
     private Dimension currentImageSize;
+    private int xExtra, yExtra;
+    private boolean pressed;
+    private Point pressedLocation;
 
     public MainPanel() {
         currentImage = 0;
         images = new HashMap<>();
         yOffset = 0;
         currentImageSize = new Dimension();
+        xExtra = yExtra = 0;
+        pressed = false;
+        pressedLocation = new Point();
 
         addMouseWheelListener((e) -> {
             if(!images.isEmpty()){
@@ -62,6 +70,34 @@ public class MainPanel extends JPanel {
                 repaint();
             }
         });
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                pressedLocation = e.getPoint();
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                pressed = false;
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                Point draggedLocation = e.getPoint();
+                if(pressed){
+                    xExtra = draggedLocation.x - pressedLocation.x;
+                    yExtra = draggedLocation.y - pressedLocation.y;
+                    repaint();
+                }
+            }
+        });
     }
 
     @Override
@@ -72,13 +108,13 @@ public class MainPanel extends JPanel {
         if(!images.isEmpty() && images.size() - 1 >= currentImage && currentImage >= 0){
             BufferedImage i1 = images.get(currentImage);
             int x1 = (getWidth() - i1.getWidth()) / 2;
-            g.drawImage(i1, x1, -yOffset, null);
+            g.drawImage(i1, x1 + xExtra, -yOffset + yExtra, null);
 
             // If index + 1 is OK
             if(images.size() - 1 >= currentImage + 1){
                 BufferedImage i2 = images.get(currentImage + 1);
                 int x2 = (getWidth() - i2.getWidth()) / 2;
-                g.drawImage(i2, x2, -yOffset + i1.getHeight(), null);
+                g.drawImage(i2, x2 + xExtra, -yOffset + i1.getHeight() + yExtra, null);
             }
         }
     }
