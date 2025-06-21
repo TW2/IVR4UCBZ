@@ -37,10 +37,10 @@ public class MainFrame extends JFrame {
     private JMenuBar createMenu(){
         JMenuBar mnu = new JMenuBar();
 
-        JMenu mFile = new JMenu("File");
-        JMenuItem mFileOpen = new JMenuItem("Open unprotected CBZ...");
+        JMenu mFile = new JMenu(IVR.RSX.getString("File"));
+        JMenuItem mFileOpen = new JMenuItem(IVR.RSX.getString("Open"));
         JSeparator mFileSep1 = new JSeparator(JSeparator.HORIZONTAL);
-        JMenuItem mFileQuit = new JMenuItem("Quit");
+        JMenuItem mFileQuit = new JMenuItem(IVR.RSX.getString("Quit"));
 
         mFile.add(mFileOpen);
         mFile.add(mFileSep1);
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public String getDescription() {
-                return "Unprotected CBZ file";
+                return IVR.RSX.getString("NXX");
             }
         });
         int z = fcOpen.showOpenDialog(this);

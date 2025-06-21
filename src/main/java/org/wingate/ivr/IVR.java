@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 /**
  * IVR is free for all, and you are free to fork this code or make a new one
@@ -12,6 +13,7 @@ import java.awt.*;
  * @author The Wingate 2940
  */
 public class IVR {
+    public static final ResourceBundle RSX = ResourceBundle.getBundle("LNG");
     public static void main(String[] args) {
         EventQueue.invokeLater(()->{
             FlatDarkLaf.setup();
