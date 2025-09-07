@@ -1,9 +1,7 @@
 package org.wingate.ivr.ui;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -48,24 +46,10 @@ public class MainPanel extends JPanel {
                 yOffset += e.getWheelRotation() < 0 ? -30 : 30;
 
                 // Plus
-                if(yOffset >= currentImageSize.height){
-                    int index = Math.min(images.size() - 1, currentImage + 1);
-                    if(index == currentImage + 1){
-                        yOffset = yOffset - currentImageSize.height;
-                        currentImage = index;
-                        currentImageSize = new Dimension(images.get(index).getWidth(), images.get(index).getHeight());
-                    }
-                }
+                plus(yOffset);
 
                 // Minus
-                if(yOffset < 0){
-                    int index = Math.max(0, currentImage - 1);
-                    if(index == currentImage - 1){
-                        yOffset = yOffset + currentImageSize.height;
-                        currentImage = index;
-                        currentImageSize = new Dimension(images.get(index).getWidth(), images.get(index).getHeight());
-                    }
-                }
+                minus(yOffset);
 
                 repaint();
             }
@@ -148,6 +132,44 @@ public class MainPanel extends JPanel {
         } catch (IOException ex) {
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void plus(int offset){
+        if(!images.isEmpty()){
+            if(offset == -1) yOffset += currentImageSize.height;
+            if(yOffset >= currentImageSize.height){
+                int index = Math.min(images.size() - 1, currentImage + 1);
+                if(index == currentImage + 1){
+                    yOffset = yOffset - currentImageSize.height;
+                    currentImage = index;
+                    currentImageSize = new Dimension(images.get(index).getWidth(), images.get(index).getHeight());
+                }
+            }
+            repaint();
+        }
+    }
+
+    public void minus(int offset){
+        if(!images.isEmpty()){
+            if(offset == -1) yOffset += -currentImageSize.height;
+            if(yOffset < 0){
+                int index = Math.max(0, currentImage - 1);
+                if(index == currentImage - 1){
+                    yOffset = yOffset + currentImageSize.height;
+                    currentImage = index;
+                    currentImageSize = new Dimension(images.get(index).getWidth(), images.get(index).getHeight());
+                }
+            }
+            repaint();
+        }
+    }
+
+    public void mNavGoToNextPageActionListener(ActionEvent e){
+        plus(-1);
+    }
+
+    public void mNavGoToPreviousPageActionListener(ActionEvent e){
+        minus(-1);
     }
 
 }

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 /**
@@ -20,7 +21,6 @@ public class MainFrame extends JFrame {
     private final JFileChooser fcOpen;
 
     public MainFrame() throws HeadlessException {
-        setJMenuBar(createMenu());
 
         mPanel = new MainPanel();
         JPanel embedPane = new JPanel();
@@ -32,6 +32,8 @@ public class MainFrame extends JFrame {
         embedPane.setLayout(new BorderLayout());
         embedPane.add(mPanel, BorderLayout.CENTER);
         mPanel.setBackground(Color.black);
+
+        setJMenuBar(createMenu());
     }
 
     private JMenuBar createMenu(){
@@ -49,6 +51,20 @@ public class MainFrame extends JFrame {
 
         mFileOpen.addActionListener(this::mFileOpenActionListener);
         mFileQuit.addActionListener(this::mFileQuitActionListener);
+
+        JMenu mNav = new JMenu(IVR.RSX.getString("Navigation"));
+        JMenuItem mNavNextPage = new JMenuItem(IVR.RSX.getString("NextPage"));
+        JMenuItem mNavPrevPage = new JMenuItem(IVR.RSX.getString("PrevPage"));
+
+        mNavNextPage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+        mNavPrevPage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+
+        mNav.add(mNavNextPage);
+        mNav.add(mNavPrevPage);
+        mnu.add(mNav);
+
+        mNavNextPage.addActionListener(mPanel::mNavGoToNextPageActionListener);
+        mNavPrevPage.addActionListener(mPanel::mNavGoToPreviousPageActionListener);
 
         return mnu;
     }
